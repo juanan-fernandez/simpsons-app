@@ -3,7 +3,7 @@ package com.example.bigschoolexample.data.mapper
 import com.example.bigschoolexample.data.remote.dto.CharacterDto
 import com.example.bigschoolexample.domain.model.Character
 
-private const val IMAGES_BASE_URL = "https://thesimpsonsapi.com"
+private const val IMAGES_BASE_URL = "https://cdn.thesimpsonsapi.com/500"
 
 fun CharacterDto.toDomain(): Character {
     return Character(
