@@ -1,5 +1,6 @@
 package com.example.bigschoolexample.ui.components
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -7,14 +8,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +23,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -109,25 +114,32 @@ fun CitizenProfileCard(
                 overflow = TextOverflow.Ellipsis
             )
 
-            TextBadge(
-                text = role,
-                textStyle = roleStyle,
-                containerColor = Color(0xFFF5F5F5),
-                borderColor = Color(0xFFD4D4D4)
-            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                TextBadge(
+                    text = role,
+                    textStyle = roleStyle,
+                    containerColor = Color(0xFFF5F5F5),
+                    borderColor = Color(0xFFD4D4D4)
+                )
 
-            TextBadge(
-                text = ageText,
-                textStyle = ageStyle,
-                containerColor = Color(0xFFFFE028),
-                borderColor = borderColor
-            )
+                TextBadge(
+                    text = ageText,
+                    textStyle = ageStyle,
+                    containerColor = Color(0xFFFFE028),
+                    borderColor = borderColor
+                )
+            }
 
             QuoteBubble(
                 text = quote,
                 textStyle = quoteStyle,
                 borderColor = borderColor
             )
+
+            Spacer(modifier = Modifier.height(8.dp))
 
             Box(
                 modifier = Modifier
@@ -173,7 +185,7 @@ private fun QuoteBubble(
     borderColor: Color,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
+    Box(modifier = modifier) {
         Box(
             modifier = Modifier
                 .fillMaxWidth(0.95f)
@@ -190,19 +202,23 @@ private fun QuoteBubble(
             )
         }
 
-        Spacer(modifier = Modifier.height(2.dp))
-
-        Row(
-            modifier = Modifier.padding(start = 38.dp),
-            verticalAlignment = Alignment.Top
+        Canvas(
+            modifier = Modifier
+                .padding(start = 38.dp)
+                .offset(y = (49).dp)
+                .size(width = 30.dp, height = 20.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .offset(y = (-6).dp)
-                    .sizeIn(minWidth = 22.dp, minHeight = 18.dp)
-                    .background(Color.White)
-                    .border(width = 4.dp, color = borderColor)
-            )
+            val path = Path().apply {
+                moveTo(10f, 0f)
+                lineTo(size.width, 0f)
+                lineTo(0f, size.height)
+                close()
+            }
+            drawPath(path, Color.White)
+
+            val strokeW = 4.dp.toPx()
+            drawLine(borderColor, Offset(size.width, 0f), Offset(0f, size.height), strokeW, cap = StrokeCap.Round)
+            drawLine(borderColor, Offset(0f, size.height), Offset(10f, 0f), strokeW, cap = StrokeCap.Round)
         }
     }
 }
