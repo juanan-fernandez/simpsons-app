@@ -48,9 +48,9 @@ fun CitizenProfileCard(
     role: String,
     ageText: String,
     quote: String,
-    actionText: String,
-    onActionClick: () -> Unit,
     modifier: Modifier = Modifier,
+    actionText: String? = null,
+    onActionClick: (() -> Unit)? = null,
     imageContentDescription: String? = name,
     statusText: String? = null,
     contentPadding: PaddingValues = PaddingValues(24.dp),
@@ -139,22 +139,24 @@ fun CitizenProfileCard(
                 borderColor = borderColor
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            if (!actionText.isNullOrBlank() && onActionClick != null) {
+                Spacer(modifier = Modifier.height(8.dp))
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.92f)
-                    .background(buttonColor)
-                    .border(width = actionBorderWidth, color = borderColor)
-                    .clickable(onClick = onActionClick)
-                    .padding(vertical = 18.dp, horizontal = 16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = actionText,
-                    style = actionStyle,
-                    textAlign = TextAlign.Center
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(0.92f)
+                        .background(buttonColor)
+                        .border(width = actionBorderWidth, color = borderColor)
+                        .clickable(onClick = onActionClick)
+                        .padding(vertical = 18.dp, horizontal = 16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = actionText,
+                        style = actionStyle,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
         }
     }
