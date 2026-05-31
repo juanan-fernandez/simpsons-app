@@ -1,6 +1,5 @@
 package com.example.bigschoolexample.ui.components
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -12,8 +11,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,10 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.StrokeCap
-
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -114,9 +107,8 @@ fun CitizenProfileCard(
                 overflow = TextOverflow.Ellipsis
             )
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 TextBadge(
                     text = role,
@@ -169,12 +161,13 @@ private fun TextBadge(
     containerColor: Color,
     borderColor: Color,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
 ) {
     Box(
         modifier = modifier
             .background(containerColor)
             .border(width = 2.dp, color = borderColor)
-            .padding(horizontal = 14.dp, vertical = 10.dp)
+            .padding(contentPadding)
     ) {
         Text(text = text, style = textStyle)
     }
@@ -187,41 +180,37 @@ private fun QuoteBubble(
     borderColor: Color,
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier = modifier) {
+    Box(
+        modifier = modifier
+            .padding(top = 12.dp)
+            .fillMaxWidth(0.95f)
+    ) {
         Box(
             modifier = Modifier
-                .fillMaxWidth(0.95f)
+                .fillMaxWidth()
                 .clip(RoundedCornerShape(28.dp))
                 .background(Color.White)
                 .border(width = 4.dp, color = borderColor, shape = RoundedCornerShape(28.dp))
-                .padding(horizontal = 20.dp, vertical = 16.dp),
-            contentAlignment = Alignment.Center
+                .padding(horizontal = 20.dp, vertical = 16.dp)
         ) {
             Text(
                 text = text,
                 style = textStyle,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
             )
         }
 
-        Canvas(
+        TextBadge(
+            text = "FRASE",
+            textStyle = CitizenProfileCardDefaults.roleStyle.copy(color = Color.Black),
+            containerColor = Color(0xFFFFE028),
+            borderColor = borderColor,
             modifier = Modifier
-                .padding(start = 38.dp)
-                .offset(y = (49).dp)
-                .size(width = 30.dp, height = 20.dp)
-        ) {
-            val path = Path().apply {
-                moveTo(10f, 0f)
-                lineTo(size.width, 0f)
-                lineTo(0f, size.height)
-                close()
-            }
-            drawPath(path, Color.White)
-
-            val strokeW = 4.dp.toPx()
-            drawLine(borderColor, Offset(size.width, 0f), Offset(0f, size.height), strokeW, cap = StrokeCap.Round)
-            drawLine(borderColor, Offset(0f, size.height), Offset(10f, 0f), strokeW, cap = StrokeCap.Round)
-        }
+                .align(Alignment.TopEnd)
+                .offset(x = (-18).dp, y = (-16).dp),
+            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
+        )
     }
 }
 
