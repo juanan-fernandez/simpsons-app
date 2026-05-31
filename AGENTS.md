@@ -16,17 +16,20 @@ All commands via `./gradlew` from repo root.
 
 ## Key Facts
 
+- **Read `rules.md` at the start of every session.** It records repository-specific mandatory rules.
+- **Read `ARCHITECTURE.md` before any code change.** It is mandatory and defines the project's architecture and coding rules.
 - **Single module** `:app`, no monorepo. Root project name: `BigSchoolExample`.
 - **Version catalog** at `gradle/libs.versions.toml` — add dependencies there before referencing in `build.gradle.kts`.
 - **Kotlin 2.2.10 + AGP 9.2.1**. Compose compiler uses `org.jetbrains.kotlin.plugin.compose` plugin (not `composeOptions`).
 - **JDK 21** required (toolchain, foojay-resolver), source/target compatibility is Java 11.
 - **minSdk 26, compileSdk 36, targetSdk 36**.
 - **No CI configuration** exists.
-- **No instruction files existed** before this one.
 
 ## App Architecture
 
 - Entrypoint: `app/src/main/java/com/example/bigschoolexample/MainActivity.kt`
+- Rules source of truth for session setup: `rules.md`.
+- Architecture source of truth: `ARCHITECTURE.md`.
 - Theme: `app/src/main/java/com/example/bigschoolexample/ui/theme/`
 - Release builds have `isMinifyEnabled = false`.
 - Uses `enableEdgeToEdge()` (edge-to-edge display).

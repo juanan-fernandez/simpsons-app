@@ -26,7 +26,7 @@ com.example.app/
 │   ├── repository/        # Repository Interfaces
 │   └── usecase/           # Single-responsibility business logic classes
 │
-├── presentation/          # Presentation Layer (UI & ViewModels)
+├── ui/                    # Presentation Layer (UI & ViewModels)
 │   ├── components/        # Reusable Compose widgets
 │   ├── screen1/           # Feature-specific package
 │   │   ├── Screen1Screen.kt      # Compose UI
@@ -82,3 +82,18 @@ Preview: Always provide a @Preview composable with mock data for every screen co
 Dependency Injection: Use the established DI framework of the project (or manual constructor injection if specified) to provide dependencies. Never instantiate Repositories or Use Cases inside ViewModels directly.
 
 No Over-engineering: Keep it simple. Do not create interfaces for Use Cases or ViewModels unless strictly necessary. Interfaces are mandatory ONLY for Repositories (to separate Domain from Data).
+
+## 🤖 Instructions for Open code
+
+Before doing ANY of the following:
+- Adding code
+- Refactoring
+- Creating new classes
+- Changing behavior
+
+MUST:
+1. Read this `ARCHITECTURE.md`
+2. Follow all rules defined here
+3. If a request violates these rules, explain the conflict instead of implementing it
+
+This document is the **single source of truth** for architectural decisions.
