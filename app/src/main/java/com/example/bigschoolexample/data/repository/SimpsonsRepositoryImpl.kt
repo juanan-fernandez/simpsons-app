@@ -21,7 +21,7 @@ class SimpsonsRepositoryImpl(
         emit(NetworkResult.Loading)
 
         try {
-            val characters = apiService.getCharacters().map { it.toDomain() }
+            val characters = apiService.getCharacters().results.map { it.toDomain() }
             emit(NetworkResult.Success(characters))
         } catch (exception: NoInternetException) {
             emit(NetworkResult.Error(exception, exception.message ?: "No internet connection available."))
