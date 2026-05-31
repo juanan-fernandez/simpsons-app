@@ -3,7 +3,7 @@ package com.example.bigschoolexample.data.repository
 import com.example.bigschoolexample.data.mapper.toDomain
 import com.example.bigschoolexample.data.remote.NoInternetException
 import com.example.bigschoolexample.data.remote.SimpsonsApiService
-import com.example.bigschoolexample.domain.model.Character
+import com.example.bigschoolexample.domain.model.CharactersPage
 import com.example.bigschoolexample.domain.model.NetworkResult
 import com.example.bigschoolexample.domain.repository.SimpsonsRepository
 import java.io.IOException
@@ -17,12 +17,19 @@ class SimpsonsRepositoryImpl(
     private val apiService: SimpsonsApiService,
 ) : SimpsonsRepository {
 
-    override fun getCharacters(): Flow<NetworkResult<List<Character>>> = flow {
+    override fun getCharacters(page: Int): Flow<NetworkResult<CharactersPage>> = flow {
         emit(NetworkResult.Loading)
 
         try {
-            val characters = apiService.getCharacters().results.map { it.toDomain() }
-            emit(NetworkResult.Success(characters))
+            val response = apiService.getCharacters(page)
+            emit(
+                NetworkResult.Success(
+                    CharactersPage(
+                        characters = response.results.map { it.toDomain() },
+                        hasNextPage = response.next != null,
+                    ),
+                ),
+            )
         } catch (exception: NoInternetException) {
             emit(NetworkResult.Error(exception, exception.message ?: "No internet connection available."))
         } catch (exception: HttpException) {

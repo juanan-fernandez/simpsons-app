@@ -3,19 +3,24 @@ package com.example.bigschoolexample.ui.characters
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +31,7 @@ import com.example.bigschoolexample.domain.model.Character
 import com.example.bigschoolexample.ui.components.CitizenProfileCard
 import com.example.bigschoolexample.ui.components.CitizenSearchField
 import com.example.bigschoolexample.ui.theme.BigSchoolExampleTheme
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Composable
 fun CharactersRoute(
@@ -37,6 +43,7 @@ fun CharactersRoute(
     CharactersScreen(
         uiState = uiState,
         onSearchQueryChanged = viewModel::onSearchQueryChanged,
+        onLoadMore = viewModel::loadMoreCharacters,
         onRetry = viewModel::retry,
         modifier = modifier,
     )
@@ -46,10 +53,37 @@ fun CharactersRoute(
 fun CharactersScreen(
     uiState: CharactersUiState,
     onSearchQueryChanged: (String) -> Unit,
+    onLoadMore: () -> Unit,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val listState = rememberLazyListState()
+    val currentUiState by rememberUpdatedState(uiState)
+    val currentOnLoadMore by rememberUpdatedState(onLoadMore)
+
+    LaunchedEffect(listState) {
+        snapshotFlow {
+            val layoutInfo = listState.layoutInfo
+            val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+            lastVisibleItemIndex to layoutInfo.totalItemsCount
+        }.distinctUntilChanged().collect { (lastVisibleItemIndex, totalItemsCount) ->
+            val shouldLoadMore = totalItemsCount > 0 && lastVisibleItemIndex >= totalItemsCount - 3
+            val latestUiState = currentUiState
+
+            if (
+                shouldLoadMore &&
+                latestUiState.hasMoreCharacters &&
+                !latestUiState.isLoading &&
+                !latestUiState.isLoadingMore &&
+                latestUiState.loadMoreErrorMessage.isNullOrBlank()
+            ) {
+                currentOnLoadMore()
+            }
+        }
+    }
+
     LazyColumn(
+        state = listState,
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFFFFD21F))
@@ -101,6 +135,21 @@ fun CharactersScreen(
                         modifier = Modifier.fillMaxWidth(),
                     )
                 }
+
+                if (uiState.isLoadingMore) {
+                    item {
+                        LoadingMoreContent()
+                    }
+                }
+
+                if (!uiState.loadMoreErrorMessage.isNullOrBlank()) {
+                    item {
+                        LoadMoreErrorContent(
+                            message = uiState.loadMoreErrorMessage.orEmpty(),
+                            onRetry = onRetry,
+                        )
+                    }
+                }
             }
         }
     }
@@ -129,9 +178,48 @@ private fun ErrorContent(
             .fillMaxWidth()
             .padding(vertical = 24.dp),
     ) {
-        androidx.compose.foundation.layout.Column(
+        Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(
+                text = message,
+                color = Color.Black,
+                textAlign = TextAlign.Center,
+            )
+            Button(onClick = onRetry) {
+                Text(text = "Retry")
+            }
+        }
+    }
+}
+
+@Composable
+private fun LoadingMoreContent(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        CircularProgressIndicator(color = Color.Black)
+    }
+}
+
+@Composable
+private fun LoadMoreErrorContent(
+    message: String,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.fillMaxWidth(),
         ) {
             Text(
@@ -188,6 +276,7 @@ private fun CharactersScreenPreview() {
                 ),
             ),
             onSearchQueryChanged = {},
+            onLoadMore = {},
             onRetry = {},
         )
     }
