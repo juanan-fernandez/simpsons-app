@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Springfield Directory - Bongo Edition</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&amp;family=Hanken+Grotesk:wght@400;500;700&amp;family=Bangers&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "secondary-fixed": "#48befe",
+                "primary-container": "#fed90f",
+                "on-secondary-fixed": "#001e2e",
+                "primary-fixed-dim": "#e7c500",
+                "surface-container-lowest": "#ffffff",
+                "surface": "#fbfaee",
+                "inverse-surface": "#1A1A1A",
+                "ink-black": "#000000",
+                "tertiary-fixed-dim": "#78dc77",
+                "on-tertiary": "#ffffff",
+                "error": "#ff0000",
+                "inverse-on-surface": "#f2f1e5",
+                "primary": "#6f5d00",
+                "surface-container-highest": "#e4e3d7",
+                "on-primary-container": "#000000",
+                "outline": "#000000",
+                "on-error-container": "#93000a",
+                "on-surface-variant": "#000000",
+                "on-secondary-container": "#000000",
+                "on-primary-fixed-variant": "#000000",
+                "on-secondary": "#ffffff",
+                "surface-container-high": "#e9e9dd",
+                "outline-variant": "#000000",
+                "surface-variant": "#e4e3d7",
+                "surface-dim": "#dbdbcf",
+                "primary-fixed": "#ffe263",
+                "status-deceased": "#616161",
+                "surface-container": "#efeee3",
+                "secondary-fixed-dim": "#86cfff",
+                "on-tertiary-fixed": "#002204",
+                "card-bg": "#ffffff",
+                "tertiary-container": "#8df28a",
+                "secondary": "#009dde",
+                "surface-tint": "#6f5d00",
+                "on-secondary-fixed-variant": "#004c6d",
+                "on-tertiary-fixed-variant": "#005313",
+                "surface-container-low": "#f5f4e8",
+                "tertiary-fixed": "#94f990",
+                "status-alive": "#4CAF50",
+                "on-tertiary-container": "#00701d",
+                "on-background": "#000000",
+                "background": "#fbfaee",
+                "on-error": "#ffffff",
+                "on-primary": "#ffffff",
+                "surface-bright": "#fbfaee",
+                "tertiary": "#00b12d",
+                "on-primary-fixed": "#000000",
+                "secondary-container": "#48befe",
+                "on-surface": "#000000",
+                "inverse-primary": "#e7c500",
+                "error-container": "#ffdad6"
+            },
+            "borderRadius": {
+                "DEFAULT": "0px",
+                "lg": "4px",
+                "xl": "8px",
+                "full": "9999px"
+            },
+            "spacing": {
+                "base": "8px",
+                "gutter": "24px",
+                "margin": "32px",
+                "container-max-width": "1280px"
+            },
+            "fontFamily": {
+                "body-lg": ["Hanken Grotesk"],
+                "label-sm": ["Hanken Grotesk"],
+                "body-md": ["Hanken Grotesk"],
+                "headline-lg": ["Bangers"],
+                "label-bold": ["Bangers"],
+                "headline-md": ["Bangers"],
+                "headline-xl": ["Bangers"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        /* Halftone Pattern */
+        .halftone {
+            background-image: radial-gradient(#000000 10%, transparent 11%);
+            background-size: 10px 10px;
+            opacity: 0.05;
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .comic-border {
+            border: 4px solid #000000;
+            box-shadow: 6px 6px 0px #000000;
+            border-radius: 4px;
+        }
+
+        .comic-border-thin {
+            border: 3px solid #000000;
+            box-shadow: 4px 4px 0px #000000;
+        }
+
+        .comic-heading {
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            -webkit-text-stroke: 1px black;
+            color: #fed90f;
+            text-shadow: 3px 3px 0px #000000;
+        }
+
+        /* Speech Bubble Style */
+        .speech-bubble {
+            position: relative;
+            background: #ffffff;
+            border: 3px solid #000000;
+            padding: 8px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 20px;
+            border-width: 10px 10px 0;
+            border-style: solid;
+            border-color: #000000 transparent transparent;
+        }
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 21px;
+            border-width: 9px 9px 0;
+            border-style: solid;
+            border-color: #ffffff transparent transparent;
+            z-index: 1;
+        }
+
+        /* Decorative Burst Elements */
+        .zap-decor {
+            position: absolute;
+            background: #ff0000;
+            color: white;
+            font-family: 'Bangers', cursive;
+            padding: 2px 6px;
+            font-size: 10px;
+            transform: rotate(-15deg);
+            border: 2px solid black;
+            box-shadow: 2px 2px 0px black;
+            top: -10px;
+            right: -10px;
+            z-index: 10;
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, #efeee3 25%, #f5f4e8 50%, #efeee3 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .card-expand-transition {
+            transition: all 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #fbfaee; border-left: 2px solid black; }
+        ::-webkit-scrollbar-thumb { background: #fed90f; border: 2px solid black; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col font-body-md overflow-hidden relative">
+<div class="halftone"></div>
+<!-- Top App Bar -->
+<header class="z-50 docked full-width top-0 sticky bg-primary-container border-b-4 border-black" id="top-app-bar">
+<div class="flex justify-between items-center px-gutter py-4 w-full max-w-container-max-width mx-auto">
+<div class="flex flex-col">
+<h1 class="comic-heading text-5xl font-black italic">
+                SPRINGFIELD
+            </h1>
+<span class="font-label-bold text-lg text-black uppercase tracking-widest -mt-1 bg-white px-2 border-2 border-black inline-block self-start transform -rotate-1">Directory</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="comic-border-thin p-3 bg-secondary-container text-black hover:bg-secondary-container/80 transition-all active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center" id="layout-toggle">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+</button>
+</div>
+</div>
+<!-- Search & Filter Bar -->
+<div class="px-gutter pb-4">
+<div class="relative w-full">
+<input class="w-full bg-white border-4 border-black rounded-none py-4 pl-12 pr-4 shadow-[4px_4px_0px_rgba(0,0,0,1)] focus:ring-0 focus:border-secondary text-xl font-headline-md outline-none uppercase" id="search-input" placeholder="Find a citizen..." type="text"/>
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-black font-bold" data-icon="search">search</span>
+</div>
+<div class="flex justify-between items-center mt-3 px-1">
+<span class="font-label-bold text-lg text-black uppercase" id="stat-indicator">Showing 6 Characters</span>
+<span class="font-label-bold text-sm text-white bg-black px-3 py-1 rounded-none border-2 border-black" id="page-indicator">Page 1 of 5</span>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow overflow-y-auto px-gutter py-gutter custom-scrollbar pb-32 relative z-10" id="main-content">
+<div class="grid grid-cols-2 gap-6 transition-all duration-300" id="character-grid">
+<!-- Skeleton Loaders -->
+<div class="character-skeleton bg-white comic-border p-4">
+<div class="aspect-square bg-gray-100 mb-3 border-2 border-black"></div>
+<div class="h-8 w-3/4 bg-gray-100 mb-2 border-2 border-black"></div>
+<div class="h-6 w-1/2 bg-gray-100 border-2 border-black"></div>
+</div>
+<div class="character-skeleton bg-white comic-border p-4">
+<div class="aspect-square bg-gray-100 mb-3 border-2 border-black"></div>
+<div class="h-8 w-3/4 bg-gray-100 mb-2 border-2 border-black"></div>
+<div class="h-6 w-1/2 bg-gray-100 border-2 border-black"></div>
+</div>
+</div>
+<!-- Infinite Scroll Loader -->
+<div class="hidden py-10 flex justify-center w-full" id="infinite-loader">
+<div class="w-12 h-12 border-8 border-primary-container border-t-black rounded-full animate-spin comic-border-thin"></div>
+</div>
+<!-- Empty State -->
+<div class="hidden py-12 flex flex-col items-center text-center" id="empty-state">
+<div class="relative w-48 h-48 mb-6 comic-border overflow-hidden bg-white flex items-center justify-center rotate-3">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0HmJ72GWfG1QYyP5LqoK6DNM9aT5Me39Eq-1G3Z1GNt1jjADp1uMpXuOQIYKjkFyCTawUo3bnLy8rC0uaUQCbLb6Uv50O8SJJThTe9kXz9h-0qLYksBGpBjHTPBqdTkRom1zLJzdnEACfUaubpR0Qbq7LtKb5prcdcPydFvpIjdRL0rggGWonNx8mMCNdLR9nq2xJM5gexWuo3_ri0ci1sMwKjRadrmyUi84bhDpAiFeDSPihJs3q3G07IM8uxHf3XEgcwKn0Lmr8"/>
+</div>
+<h2 class="comic-heading text-4xl text-black mb-2">Ay Caramba!</h2>
+<p class="font-headline-md text-xl text-black uppercase max-w-xs mb-6">No characters found! Maybe they're at Moe's?</p>
+<button class="px-8 py-4 bg-primary-container text-black font-headline-md text-xl comic-border active:translate-x-1 active:translate-y-1 active:shadow-none transition-all" id="clear-search">START OVER!</button>
+</div>
+<!-- Error State -->
+<div class="hidden py-12 flex flex-col items-center text-center" id="error-state">
+<div class="relative w-48 h-48 mb-6 comic-border overflow-hidden bg-white flex items-center justify-center -rotate-3">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5N0zNhenRslTNYQFpuP9gSSDIr9uxolovqJMvzMUcC3PVlPutcGVZPvVu8oqqQt5eDjxZRnV0EwyWfaNOnlLbaY_wAeUVbx6uab10XqLK-87BABHa3yT7iAJdHId_JcHE-LUCz9rTuGAWoih1kwvbqBgfAgpN5_n-c4Pp-k615HOkMRsqQRUby2lfASjiAl_Ed5lDp_bxKmX___xLKCdWSJcbcd7Z4A_N7I-4VjUgyseL7_1GfxX2f9ZTB3opUq5nOktanTHn276g"/>
+</div>
+<h2 class="comic-heading text-4xl text-error mb-2">D'OH! SYSTEM CRASH!</h2>
+<p class="font-headline-md text-xl text-black uppercase max-w-xs mb-6">The power plant is leaking data!</p>
+<button class="px-8 py-4 bg-secondary text-white font-headline-md text-xl comic-border active:translate-x-1 active:translate-y-1 active:shadow-none transition-all" id="retry-btn">RETRY FIX!</button>
+</div>
+<!-- End of Catalog -->
+<div class="hidden py-10 text-center" id="end-catalog">
+<p class="font-headline-md text-xl text-white bg-black comic-border py-4 px-8 inline-block rotate-1">
+            THAT'S ALL FOLKS! 42 CHARACTERS!
+        </p>
+</div>
+</main>
+<!-- Fixed Footer -->
+<footer class="z-50 docked full-width bottom-0 sticky bg-white border-t-4 border-black py-4 px-gutter flex items-center justify-between shadow-[0_-4px_0px_rgba(0,0,0,0.1)]" id="main-footer">
+<button class="flex items-center gap-2 font-headline-md text-xl text-black opacity-30 cursor-not-allowed px-4 py-2 uppercase" disabled="" id="prev-page">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+        Prev
+    </button>
+<div class="flex items-center gap-3">
+<div class="w-4 h-4 bg-primary border-2 border-black rotate-45"></div>
+<div class="w-3 h-3 bg-gray-300 border-2 border-black"></div>
+<div class="w-3 h-3 bg-gray-300 border-2 border-black"></div>
+</div>
+<button class="flex items-center gap-2 font-headline-md text-xl text-black bg-secondary-container px-4 py-2 comic-border-thin hover:scale-105 transition-all uppercase" id="next-page">
+        Next
+        <span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</footer>
+<script>
+    // Mock Data
+    const characters = [
+        {
+            id: 1,
+            name: "Homer Simpson",
+            occupation: "Safety Inspector",
+            age: 39,
+            status: "Alive",
+            birthdate: "1956-05-12",
+            gender: "Male",
+            image: "https://images.unsplash.com/photo-1596464716127-f2a82984de30?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+            phrases: ["D'oh!", "Mmm... donuts", "Why you little!", "Woo-hoo!"]
+        },
+        {
+            id: 2,
+            name: "Bart Simpson",
+            occupation: "Student",
+            age: 10,
+            status: "Alive",
+            birthdate: "1979-02-23",
+            gender: "Male",
+            image: "https://images.unsplash.com/photo-1618336753974-aae8e04506aa?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+            phrases: ["Eat my shorts!", "Ay Caramba!", "I'm Bart Simpson!"]
+        },
+        {
+            id: 3,
+            name: "Ned Flanders",
+            occupation: "Shop Owner",
+            age: 60,
+            status: "Alive",
+            birthdate: "1932-04-10",
+            gender: "Male",
+            image: "https://images.unsplash.com/photo-1541364983171-a8ba01e95cfc?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+            phrases: ["Hi-dilly-ho!", "Okely Dokely!", "Flanders!"]
+        },
+        {
+            id: 4,
+            name: "Frank Grimes",
+            occupation: "Former Employee",
+            age: 35,
+            status: "Deceased",
+            birthdate: "1962-08-15",
+            gender: "Male",
+            image: "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+            phrases: ["I live in a single room!", "He's a menace!"]
+        },
+        {
+            id: 5,
+            name: "Lisa Simpson",
+            occupation: "Student / Sax",
+            age: 8,
+            status: "Alive",
+            birthdate: "1981-05-09",
+            gender: "Female",
+            image: "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+            phrases: ["The saxophone is soul.", "Trust in yourself!"]
+        },
+        {
+            id: 6,
+            name: "Mr. Burns",
+            occupation: "Plant Owner",
+            age: 104,
+            status: "Alive",
+            birthdate: "1890-09-15",
+            gender: "Male",
+            image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+            phrases: ["Excellent...", "Release the hounds!", "Smithers!"]
+        }
+    ];
+
+    const grid = document.getElementById('character-grid');
+    const searchInput = document.getElementById('search-input');
+    const layoutToggle = document.getElementById('layout-toggle');
+    let isGridView = true;
+
+    function createCharacterCard(char) {
+        const isAlive = char.status === 'Alive';
+        const badgeColor = isAlive ? 'bg-tertiary' : 'bg-status-deceased';
+        const zapText = isAlive ? 'WOW!' : 'R.I.P.';
+        
+        const card = document.createElement('div');
+        card.className = `character-card relative bg-white comic-border p-4 card-expand-transition hover:-translate-y-1 transition-all`;
+        card.setAttribute('data-id', char.id);
+        
+        card.innerHTML = `
+            <div class="card-content flex flex-col h-full">
+                <div class="zap-decor">${zapText}</div>
+                <div class="relative aspect-square border-4 border-black mb-3 overflow-hidden">
+                    <img src="${char.image}" class="w-full h-full object-cover">
+                    <div class="absolute top-2 right-2 px-3 py-1 ${badgeColor} border-2 border-black text-white font-headline-md text-xs uppercase italic">
+                        ${char.status}
+                    </div>
+                </div>
+                
+                <h3 class="font-headline-md text-2xl text-black truncate uppercase leading-tight mb-1">${char.name}</h3>
+                <p class="font-headline-md text-sm text-secondary bg-black/5 px-2 py-0.5 inline-block self-start mb-2 uppercase border border-black/10">${char.occupation}</p>
+                
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="font-headline-md text-xs text-black border-2 border-black px-2 bg-primary-container">AGE: ${char.age}</span>
+                </div>
+
+                <div class="compact-info flex flex-col flex-grow">
+                    <div class="speech-bubble">
+                        <p class="font-headline-md text-sm text-black italic">"${char.phrases[0]}"</p>
+                    </div>
+                    <button class="expand-btn mt-auto w-full py-3 bg-secondary-container text-black border-4 border-black font-headline-md text-lg uppercase shadow-[4px_4px_0px_black] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all">Who's this?</button>
+                </div>
+
+                <div class="expanded-info hidden pt-4 border-t-4 border-black mt-2 space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-primary-container p-2 border-2 border-black">
+                            <p class="text-black uppercase font-headline-md text-[10px]">Born</p>
+                            <p class="font-headline-md text-sm">${char.birthdate}</p>
+                        </div>
+                        <div class="bg-secondary-container p-2 border-2 border-black">
+                            <p class="text-black uppercase font-headline-md text-[10px]">Gender</p>
+                            <p class="font-headline-md text-sm">${char.gender}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-black uppercase font-headline-md text-sm mb-2">Top Quotes:</p>
+                        <div class="space-y-3">
+                            ${char.phrases.map(phrase => `<div class="bg-white p-3 border-2 border-black italic text-black font-headline-md text-sm shadow-[2px_2px_0px_black] transform rotate-${Math.floor(Math.random() * 3) - 1}">"${phrase}"</div>`).join('')}
+                        </div>
+                    </div>
+                    <button class="collapse-btn w-full py-2 bg-white text-black border-4 border-black font-headline-md text-lg uppercase shadow-[4px_4px_0px_black] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all">Close Files</button>
+                </div>
+            </div>
+        `;
+
+        card.querySelector('.expand-btn').addEventListener('click', () => {
+            card.classList.add('col-span-2');
+            card.querySelector('.compact-info').classList.add('hidden');
+            card.querySelector('.expanded-info').classList.remove('hidden');
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+
+        card.querySelector('.collapse-btn').addEventListener('click', () => {
+            if(isGridView) card.classList.remove('col-span-2');
+            card.querySelector('.compact-info').classList.remove('hidden');
+            card.querySelector('.expanded-info').classList.add('hidden');
+        });
+
+        return card;
+    }
+
+    function renderInitial() {
+        grid.innerHTML = '';
+        characters.forEach(char => {
+            grid.appendChild(createCharacterCard(char));
+        });
+        document.getElementById('stat-indicator').textContent = `Showing ${characters.length} Characters`;
+    }
+
+    // Search logic
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        const filtered = characters.filter(c => c.name.toLowerCase().includes(query));
+        
+        grid.innerHTML = '';
+        const emptyState = document.getElementById('empty-state');
+        const endCatalog = document.getElementById('end-catalog');
+
+        if (filtered.length === 0) {
+            emptyState.classList.remove('hidden');
+            endCatalog.classList.add('hidden');
+        } else {
+            emptyState.classList.add('hidden');
+            filtered.forEach(char => grid.appendChild(createCharacterCard(char)));
+            if(query === "") endCatalog.classList.add('hidden');
+            else endCatalog.classList.remove('hidden');
+        }
+        document.getElementById('stat-indicator').textContent = `Found ${filtered.length} Pals!`;
+    });
+
+    document.getElementById('clear-search').addEventListener('click', () => {
+        searchInput.value = '';
+        searchInput.dispatchEvent(new Event('input'));
+    });
+
+    // Layout Toggle
+    layoutToggle.addEventListener('click', () => {
+        isGridView = !isGridView;
+        const icon = layoutToggle.querySelector('.material-symbols-outlined');
+        if (isGridView) {
+            grid.classList.remove('grid-cols-1');
+            grid.classList.add('grid-cols-2');
+            icon.textContent = 'grid_view';
+            document.querySelectorAll('.character-card').forEach(card => card.classList.remove('col-span-2'));
+        } else {
+            grid.classList.remove('grid-cols-2');
+            grid.classList.add('grid-cols-1');
+            icon.textContent = 'view_agenda';
+        }
+    });
+
+    // Infinite Scroll
+    const main = document.getElementById('main-content');
+    const loader = document.getElementById('infinite-loader');
+    main.addEventListener('scroll', () => {
+        if (main.scrollTop + main.clientHeight >= main.scrollHeight - 50) {
+            if (loader.classList.contains('hidden')) {
+                loader.classList.remove('hidden');
+                setTimeout(() => {
+                    loader.classList.add('hidden');
+                    document.getElementById('end-catalog').classList.remove('hidden');
+                }, 1000);
+            }
+        }
+    });
+
+    // Initialization
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            renderInitial();
+        }, 800);
+    });
+
+</script>
+</body></html>

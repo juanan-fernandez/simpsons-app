@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Springfield Directory - Alerta Nuclear</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&amp;family=Hanken+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .comic-border {
+            box-shadow: 6px 6px 0px 0px #1A1A1A;
+            border: 3px solid #1A1A1A;
+        }
+        
+        .halftone-bg {
+            background-image: radial-gradient(#1A1A1A 10%, transparent 11%);
+            background-size: 8px 8px;
+            opacity: 0.05;
+        }
+
+        .jagged-speech-burst {
+            clip-path: polygon(0% 15%, 15% 15%, 10% 0%, 30% 10%, 50% 0%, 70% 10%, 90% 0%, 85% 15%, 100% 15%, 95% 40%, 100% 70%, 85% 85%, 90% 100%, 70% 90%, 50% 100%, 30% 90%, 10% 100%, 15% 85%, 0% 85%, 5% 40%);
+        }
+
+        @keyframes pulse-red {
+            0% { background-color: #ba1a1a; }
+            50% { background-color: #ffdad6; }
+            100% { background-color: #ba1a1a; }
+        }
+        .animate-alert {
+            animation: pulse-red 2s infinite ease-in-out;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#fbfaee",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#e7c500",
+                        "on-secondary-fixed": "#001e2e",
+                        "primary-container": "#fed90f",
+                        "secondary-container": "#48befe",
+                        "secondary": "#00658f",
+                        "primary": "#6f5d00",
+                        "ink-black": "#1A1A1A",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#1b1c15",
+                        "on-surface-variant": "#4c4732",
+                        "outline": "#7e775f",
+                        "outline-variant": "#cfc6ab",
+                        "card-bg": "#FFFBEB"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "headline-xl": ["Bricolage Grotesque"],
+                        "headline-md": ["Bricolage Grotesque"],
+                        "label-bold": ["Hanken Grotesk"],
+                        "headline-lg": ["Bricolage Grotesque"]
+                    },
+                    "spacing": {
+                        "margin": "32px",
+                        "container-max-width": "1280px",
+                        "gutter": "24px",
+                        "base": "8px"
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body-md text-on-surface min-h-screen flex flex-col relative overflow-x-hidden">
+<!-- Halftone Texture Overlay -->
+<div class="fixed inset-0 halftone-bg pointer-events-none z-0"></div>
+<!-- TopAppBar -->
+<header class="docked full-width top-0 sticky z-50 bg-primary-container border-b-[4px] border-ink-black shadow-[0_4px_0_rgba(26,26,26,1)]">
+<div class="flex justify-between items-center px-gutter py-base w-full max-w-container-max-width mx-auto">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-ink-black font-bold text-headline-md active:scale-95 transition-transform">menu</button>
+<h1 class="font-headline-xl text-[28px] leading-tight text-ink-black font-black tracking-tighter">SPRINGFIELD DIRECTORY</h1>
+</div>
+<button class="material-symbols-outlined text-ink-black font-bold text-headline-md active:scale-95 transition-transform">search</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow flex flex-col items-center justify-center px-gutter py-margin relative z-10">
+<!-- Comic Disaster Illustration -->
+<div class="w-full max-w-md relative mb-12">
+<!-- Jagged Border for Image -->
+<div class="comic-border rounded-xl bg-card-bg overflow-hidden relative rotate-[-1deg]">
+<img alt="Comic disaster scene" class="w-full h-64 object-cover grayscale brightness-110" data-alt="A dynamic comic-book style illustration of a nuclear power plant control room in chaos. A character resembling a lazy worker sleeps at a desk while flashing red sirens illuminate the dark room with heavy, black ink shadows and halftone dot patterns. The style features thick outlines, exaggerated perspective, and vibrant yellow and blue accents on the machinery. Red 'Meltdown' warning lights pulse in the background of this Springfield-inspired animated disaster scene." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDS9upN-FNPFvf7s9D-r3GNo0sY8lYf6rH9wq844UM3LC0Cs_cFAyVe2Z_b0cm4n_HpMzZfT3oFGf_k16bp80Hd8i_KwgaWI4aAU9T8zQ0D2ClsgOhxcMCwRAmXhVVzAP89JxCl-Tl_keZOdHSWCG9dWH0TEql4c8YcPx4zjpRuhMCpaALSsyZhuH8X1elQtXvlR8zREIceaKh0HuUlV8Z1kESuey_h92t_HvxhjueS4Zye8wEhvjJ8HcMk9Pq-uwPTrjgohm4ER2jw"/>
+<!-- Speed Lines Overlay (CSS-based) -->
+<div class="absolute inset-0 pointer-events-none opacity-20 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,#000_10px,#000_11px)]"></div>
+</div>
+<!-- Floating Jagged Splash -->
+<div class="absolute -top-10 -right-4 jagged-speech-burst bg-error p-6 rotate-6 shadow-[4px_4px_0px_#1A1A1A] border-2 border-ink-black animate-alert">
+<h2 class="font-headline-lg text-white text-center leading-none tracking-tighter uppercase italic">¡ALERTA<br/>NUCLEAR!</h2>
+</div>
+</div>
+<!-- Error Message Block -->
+<div class="text-center max-w-sm space-y-6">
+<div class="bg-card-bg comic-border p-6 rotate-[1deg]">
+<p class="font-headline-md text-ink-black leading-tight mb-2 uppercase italic">
+                    ERROR DE CONEXIÓN EN EL SECTOR 7-G.
+                </p>
+<p class="font-body-lg text-on-surface-variant font-bold leading-snug">
+                    LAS CÁMARAS NO ESTÁN TRANSMITIENDO. 
+                </p>
+</div>
+<!-- CTA Button -->
+<div class="pt-4">
+<button class="w-full bg-secondary-container hover:bg-secondary text-ink-black font-headline-md py-4 px-8 rounded-xl border-[3px] border-ink-black shadow-[6px_6px_0px_0px_rgba(26,26,26,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all uppercase tracking-tight">
+                    REINTENTAR ACCESO
+                </button>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="docked full-width bottom-0 sticky z-50 bg-surface-container border-t-[4px] border-ink-black">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin py-gutter w-full">
+<div class="flex gap-2 mb-4 md:mb-0">
+<div class="w-3 h-3 rounded-full bg-ink-black"></div>
+<div class="w-3 h-3 rounded-full bg-outline-variant"></div>
+<div class="w-3 h-3 rounded-full bg-outline-variant"></div>
+</div>
+<span class="font-label-sm text-on-surface-variant uppercase font-bold tracking-widest">© 1989 Springfield Data Systems</span>
+<nav class="hidden md:flex gap-gutter mt-4 md:mt-0">
+<a class="font-label-bold text-on-surface-variant hover:text-secondary transition-colors uppercase" href="#">Privacy</a>
+<a class="font-label-bold text-on-surface-variant hover:text-secondary transition-colors uppercase" href="#">Terms</a>
+<a class="font-label-bold text-on-surface-variant hover:text-secondary transition-colors uppercase" href="#">Support</a>
+</nav>
+</div>
+</footer>
+<!-- Mobile Bottom Navigation (Visible only on mobile) -->
+<div class="md:hidden fixed bottom-16 left-0 right-0 px-gutter z-40 pointer-events-none">
+<div class="bg-white comic-border flex justify-around py-3 pointer-events-auto rounded-full max-w-xs mx-auto">
+<button class="material-symbols-outlined text-ink-black font-bold">home</button>
+<button class="material-symbols-outlined text-ink-black font-bold">explore</button>
+<button class="material-symbols-outlined text-primary font-bold">warning</button>
+<button class="material-symbols-outlined text-ink-black font-bold">person</button>
+</div>
+</div>
+<script>
+        // Simple click interaction for the button
+        const ctaBtn = document.querySelector('button');
+        ctaBtn.addEventListener('click', () => {
+            ctaBtn.innerText = 'CONECTANDO...';
+            setTimeout(() => {
+                ctaBtn.innerText = 'REINTENTAR ACCESO';
+            }, 2000);
+        });
+
+        // Atmospheric Micro-interaction: Randomly shift the jagged splash slightly
+        setInterval(() => {
+            const splash = document.querySelector('.jagged-speech-burst');
+            const randomRotate = (Math.random() * 4 + 4).toFixed(1);
+            splash.style.transform = `rotate(${randomRotate}deg) scale(${1 + Math.random() * 0.05})`;
+        }, 3000);
+    </script>
+</body></html>
