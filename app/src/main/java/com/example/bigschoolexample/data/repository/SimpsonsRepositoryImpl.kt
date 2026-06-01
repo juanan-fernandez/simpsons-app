@@ -4,6 +4,7 @@ import com.example.bigschoolexample.data.mapper.toDomain
 import com.example.bigschoolexample.data.remote.NoInternetException
 import com.example.bigschoolexample.data.remote.SimpsonsApiService
 import com.example.bigschoolexample.domain.model.CharactersPage
+import com.example.bigschoolexample.domain.model.NetworkErrorKind
 import com.example.bigschoolexample.domain.model.NetworkResult
 import com.example.bigschoolexample.domain.repository.SimpsonsRepository
 import java.io.IOException
@@ -31,7 +32,13 @@ class SimpsonsRepositoryImpl(
                 ),
             )
         } catch (exception: NoInternetException) {
-            emit(NetworkResult.Error(exception, exception.message ?: "No internet connection available."))
+            emit(
+                NetworkResult.Error(
+                    exception = exception,
+                    message = exception.message ?: "No internet connection available.",
+                    kind = NetworkErrorKind.NoInternet,
+                ),
+            )
         } catch (exception: HttpException) {
             emit(NetworkResult.Error(exception, exception.message ?: "Unable to fetch characters."))
         } catch (exception: IOException) {

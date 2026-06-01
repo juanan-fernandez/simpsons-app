@@ -5,6 +5,7 @@ import com.example.bigschoolexample.domain.model.Character
 data class CharactersUiState(
     val isLoading: Boolean = false,
     val isLoadingMore: Boolean = false,
+    val isOfflineError: Boolean = false,
     val hasMoreCharacters: Boolean = true,
     val searchQuery: String = "",
     val characters: List<Character> = emptyList(),

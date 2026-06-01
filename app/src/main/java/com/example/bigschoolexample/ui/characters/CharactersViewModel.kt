@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bigschoolexample.domain.model.Character
 import com.example.bigschoolexample.domain.model.CharactersPage
+import com.example.bigschoolexample.domain.model.NetworkErrorKind
 import com.example.bigschoolexample.domain.model.NetworkResult
 import com.example.bigschoolexample.domain.usecase.GetCharactersUseCase
 import kotlinx.coroutines.Job
@@ -39,6 +40,8 @@ class CharactersViewModel(
             currentState.copy(
                 searchQuery = query,
                 characters = displayedCharacters(query),
+                errorMessage = null,
+                isOfflineError = false,
                 loadMoreErrorMessage = null,
             )
         }
@@ -101,6 +104,7 @@ class CharactersViewModel(
                                 it.copy(
                                     isLoading = isFirstRequest,
                                     isLoadingMore = !isFirstRequest,
+                                    isOfflineError = false,
                                     errorMessage = if (isFirstRequest) null else it.errorMessage,
                                     loadMoreErrorMessage = null,
                                 )
@@ -113,7 +117,11 @@ class CharactersViewModel(
                         }
 
                         is NetworkResult.Error -> {
-                            handleLoadError(message = result.message, isInitialLoad = isFirstRequest)
+                            handleLoadError(
+                                message = result.message,
+                                isInitialLoad = isFirstRequest,
+                                kind = result.kind,
+                            )
                             shouldContinueLoading = false
                         }
                     }
@@ -139,6 +147,7 @@ class CharactersViewModel(
             currentState.copy(
                 isLoading = false,
                 isLoadingMore = false,
+                isOfflineError = false,
                 characters = displayedCharacters(currentState.searchQuery),
                 errorMessage = null,
                 loadMoreErrorMessage = null,
@@ -147,11 +156,16 @@ class CharactersViewModel(
         }
     }
 
-    private fun handleLoadError(message: String, isInitialLoad: Boolean) {
+    private fun handleLoadError(
+        message: String,
+        isInitialLoad: Boolean,
+        kind: NetworkErrorKind = NetworkErrorKind.Unknown,
+    ) {
         _uiState.update {
             it.copy(
                 isLoading = false,
                 isLoadingMore = false,
+                isOfflineError = kind == NetworkErrorKind.NoInternet,
                 errorMessage = if (isInitialLoad) message else it.errorMessage,
                 loadMoreErrorMessage = if (isInitialLoad) null else message,
                 hasMoreCharacters = hasMoreCharacters(),
