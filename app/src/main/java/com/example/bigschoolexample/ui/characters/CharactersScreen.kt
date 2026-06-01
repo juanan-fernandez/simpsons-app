@@ -1,6 +1,8 @@
 package com.example.bigschoolexample.ui.characters
 
+import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -32,6 +35,7 @@ import com.example.bigschoolexample.ui.components.CitizenProfileCard
 import com.example.bigschoolexample.ui.components.CitizenSearchField
 import com.example.bigschoolexample.ui.theme.BigSchoolExampleTheme
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlin.random.Random
 
 @Composable
 fun CharactersRoute(
@@ -39,12 +43,16 @@ fun CharactersRoute(
     modifier: Modifier = Modifier,
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
     CharactersScreen(
         uiState = uiState,
         onSearchQueryChanged = viewModel::onSearchQueryChanged,
         onLoadMore = viewModel::loadMoreCharacters,
         onRetry = viewModel::retry,
+        onCharacterClick = { character ->
+            Toast.makeText(context, character.randomToastPhrase(), Toast.LENGTH_SHORT).show()
+        },
         modifier = modifier,
     )
 }
@@ -55,6 +63,7 @@ fun CharactersScreen(
     onSearchQueryChanged: (String) -> Unit,
     onLoadMore: () -> Unit,
     onRetry: () -> Unit,
+    onCharacterClick: (Character) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
@@ -72,6 +81,7 @@ fun CharactersScreen(
 
             if (
                 shouldLoadMore &&
+                latestUiState.searchQuery.isBlank() &&
                 latestUiState.hasMoreCharacters &&
                 !latestUiState.isLoading &&
                 !latestUiState.isLoadingMore &&
@@ -106,6 +116,12 @@ fun CharactersScreen(
                 }
             }
 
+            uiState.searchQuery.isNotBlank() && uiState.isLoadingMore && uiState.characters.isEmpty() -> {
+                item {
+                    LoadingContent()
+                }
+            }
+
             !uiState.errorMessage.isNullOrBlank() && uiState.characters.isEmpty() -> {
                 item {
                     ErrorContent(
@@ -115,9 +131,18 @@ fun CharactersScreen(
                 }
             }
 
+            uiState.searchQuery.isNotBlank() && !uiState.loadMoreErrorMessage.isNullOrBlank() && uiState.characters.isEmpty() -> {
+                item {
+                    ErrorContent(
+                        message = uiState.loadMoreErrorMessage.orEmpty(),
+                        onRetry = onRetry,
+                    )
+                }
+            }
+
             uiState.characters.isEmpty() -> {
                 item {
-                    EmptyContent()
+                    EmptyContent(searchQuery = uiState.searchQuery)
                 }
             }
 
@@ -132,7 +157,10 @@ fun CharactersScreen(
                         role = character.occupation,
                         ageText = character.ageLabel(),
                         quote = character.primaryPhrase(),
-                        modifier = Modifier.fillMaxWidth(),
+                        statusText = character.statusLabel(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onCharacterClick(character) },
                     )
                 }
 
@@ -235,7 +263,10 @@ private fun LoadMoreErrorContent(
 }
 
 @Composable
-private fun EmptyContent(modifier: Modifier = Modifier) {
+private fun EmptyContent(
+    searchQuery: String,
+    modifier: Modifier = Modifier,
+) {
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -243,7 +274,7 @@ private fun EmptyContent(modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = "No characters found.",
+            text = if (searchQuery.isBlank()) "No characters found." else "No matching characters found.",
             color = Color.Black,
             textAlign = TextAlign.Center,
         )
@@ -251,11 +282,31 @@ private fun EmptyContent(modifier: Modifier = Modifier) {
 }
 
 private fun Character.primaryPhrase(): String {
-    return phrases.firstOrNull()?.takeIf { it.isNotBlank() } ?: "..."
+    val availablePhrases = phrases.filter { it.isNotBlank() }
+
+    if (availablePhrases.isEmpty()) {
+        return "..."
+    }
+
+    return availablePhrases[Random(id).nextInt(availablePhrases.size)]
 }
 
 private fun Character.ageLabel(): String {
     return age?.let { "AGE $it" } ?: "AGE ?"
+}
+
+private fun Character.statusLabel(): String {
+    return status.uppercase()
+}
+
+private fun Character.randomToastPhrase(): String {
+    val availablePhrases = phrases.filter { it.isNotBlank() }
+
+    if (availablePhrases.isEmpty()) {
+        return "..."
+    }
+
+    return availablePhrases.random()
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFD21F)
@@ -272,12 +323,14 @@ private fun CharactersScreenPreview() {
                         occupation = "Nuclear Safety Inspector",
                         portraitUrl = "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80",
                         phrases = listOf("D'oh!"),
+                        status = "Alive",
                     ),
                 ),
             ),
             onSearchQueryChanged = {},
             onLoadMore = {},
             onRetry = {},
+            onCharacterClick = {},
         )
     }
 }

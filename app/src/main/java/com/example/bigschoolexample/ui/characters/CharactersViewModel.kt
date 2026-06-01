@@ -38,8 +38,13 @@ class CharactersViewModel(
         _uiState.update { currentState ->
             currentState.copy(
                 searchQuery = query,
-                characters = visibleCharacters(query),
+                characters = displayedCharacters(query),
+                loadMoreErrorMessage = null,
             )
+        }
+
+        if (query.isNotBlank() && loadCharactersJob?.isActive != true && hasNextPage) {
+            requestNextCharactersPage()
         }
     }
 
@@ -48,23 +53,26 @@ class CharactersViewModel(
             resetPagination()
         }
 
+        if (_uiState.value.searchQuery.isNotBlank()) {
+            if (loadCharactersJob?.isActive != true && hasNextPage) {
+                requestNextCharactersPage()
+            }
+            return
+        }
+
         loadMoreCharacters()
     }
 
     fun loadMoreCharacters() {
+        if (_uiState.value.searchQuery.isNotBlank()) {
+            return
+        }
+
         if (loadCharactersJob?.isActive == true) {
             return
         }
 
-        if (visibleCharactersCount < allCharacters.size) {
-            visibleCharactersCount = (visibleCharactersCount + PAGE_BATCH_SIZE).coerceAtMost(allCharacters.size)
-            _uiState.update { currentState ->
-                currentState.copy(
-                    characters = visibleCharacters(currentState.searchQuery),
-                    hasMoreCharacters = hasMoreCharacters(),
-                    loadMoreErrorMessage = null,
-                )
-            }
+        if (revealMoreLoadedCharacters()) {
             return
         }
 
@@ -73,31 +81,50 @@ class CharactersViewModel(
             return
         }
 
-        val pageToLoad = nextPage
+        requestNextCharactersPage()
+    }
+
+    private fun requestNextCharactersPage() {
         val isInitialLoad = allCharacters.isEmpty()
 
         loadCharactersJob = viewModelScope.launch {
-            getCharactersUseCase(pageToLoad).collect { result ->
-                when (result) {
-                    is NetworkResult.Loading -> {
-                        _uiState.update {
-                            it.copy(
-                                isLoading = isInitialLoad,
-                                isLoadingMore = !isInitialLoad,
-                                errorMessage = if (isInitialLoad) null else it.errorMessage,
-                                loadMoreErrorMessage = null,
-                            )
+            var shouldContinueLoading = true
+            var isFirstRequest = isInitialLoad
+
+            while (shouldContinueLoading) {
+                var pageLoadedSuccessfully = false
+
+                getCharactersUseCase(nextPage).collect { result ->
+                    when (result) {
+                        is NetworkResult.Loading -> {
+                            _uiState.update {
+                                it.copy(
+                                    isLoading = isFirstRequest,
+                                    isLoadingMore = !isFirstRequest,
+                                    errorMessage = if (isFirstRequest) null else it.errorMessage,
+                                    loadMoreErrorMessage = null,
+                                )
+                            }
+                        }
+
+                        is NetworkResult.Success -> {
+                            appendCharactersPage(result.data)
+                            pageLoadedSuccessfully = true
+                        }
+
+                        is NetworkResult.Error -> {
+                            handleLoadError(message = result.message, isInitialLoad = isFirstRequest)
+                            shouldContinueLoading = false
                         }
                     }
-
-                    is NetworkResult.Success -> {
-                        appendCharactersPage(result.data)
-                    }
-
-                    is NetworkResult.Error -> {
-                        handleLoadError(message = result.message, isInitialLoad = isInitialLoad)
-                    }
                 }
+
+                if (!pageLoadedSuccessfully) {
+                    break
+                }
+
+                isFirstRequest = false
+                shouldContinueLoading = shouldContinueSearchingCatalog()
             }
         }
     }
@@ -112,7 +139,7 @@ class CharactersViewModel(
             currentState.copy(
                 isLoading = false,
                 isLoadingMore = false,
-                characters = visibleCharacters(currentState.searchQuery),
+                characters = displayedCharacters(currentState.searchQuery),
                 errorMessage = null,
                 loadMoreErrorMessage = null,
                 hasMoreCharacters = hasMoreCharacters(),
@@ -132,8 +159,33 @@ class CharactersViewModel(
         }
     }
 
-    private fun visibleCharacters(query: String): List<Character> {
-        return filterCharacters(query, allCharacters.take(visibleCharactersCount))
+    private fun revealMoreLoadedCharacters(): Boolean {
+        if (visibleCharactersCount >= allCharacters.size) {
+            return false
+        }
+
+        visibleCharactersCount = (visibleCharactersCount + PAGE_BATCH_SIZE).coerceAtMost(allCharacters.size)
+        _uiState.update { currentState ->
+            currentState.copy(
+                characters = displayedCharacters(currentState.searchQuery),
+                hasMoreCharacters = hasMoreCharacters(),
+                loadMoreErrorMessage = null,
+            )
+        }
+
+        return true
+    }
+
+    private fun displayedCharacters(query: String): List<Character> {
+        return if (query.isBlank()) {
+            filterCharacters(query, allCharacters.take(visibleCharactersCount))
+        } else {
+            filterCharacters(query, allCharacters)
+        }
+    }
+
+    private fun shouldContinueSearchingCatalog(): Boolean {
+        return _uiState.value.searchQuery.isNotBlank() && hasNextPage
     }
 
     private fun hasMoreCharacters(): Boolean {
