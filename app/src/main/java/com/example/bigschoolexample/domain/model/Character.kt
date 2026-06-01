@@ -7,4 +7,5 @@ data class Character(
     val occupation: String,
     val portraitUrl: String,
     val phrases: List<String>,
+    val status: String,
 )

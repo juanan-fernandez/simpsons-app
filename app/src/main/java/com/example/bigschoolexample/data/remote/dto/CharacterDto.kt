@@ -9,4 +9,5 @@ data class CharacterDto(
     val occupation: String?,
     @SerializedName("portrait_path") val portraitPath: String?,
     val phrases: List<String>?,
+    val status: String?,
 )

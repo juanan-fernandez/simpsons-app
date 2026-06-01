@@ -13,6 +13,7 @@ fun CharacterDto.toDomain(): Character {
         occupation = occupation.orEmpty().ifBlank { "Unknown" },
         portraitUrl = portraitPath.toAbsolutePortraitUrl(),
         phrases = phrases.orEmpty(),
+        status = status.orEmpty().ifBlank { "Unknown" },
     )
 }
 
