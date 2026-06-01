@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -44,7 +45,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -135,6 +138,10 @@ fun CharactersScreen(
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         item {
+            SpringfieldDirectoryTitle(modifier = Modifier.fillMaxWidth())
+        }
+
+        item {
             CitizenSearchField(
                 value = uiState.searchQuery,
                 onValueChange = onSearchQueryChanged,
@@ -202,6 +209,85 @@ fun CharactersScreen(
             }
         }
     }
+}
+
+@Composable
+private fun SpringfieldDirectoryTitle(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(
+                text = "SPRINGFIELD",
+                style = SpringfieldDirectoryTitleDefaults.titleShadowStyle,
+                modifier = Modifier.offset(x = 3.dp, y = 3.dp),
+            )
+            Text(
+                text = "SPRINGFIELD",
+                style = SpringfieldDirectoryTitleDefaults.titleStyle,
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .offset(x = 28.dp, y = (-10).dp)
+                .widthIn(min = 92.dp)
+                .background(Color.White)
+                .border(width = 3.dp, color = Color.Black)
+                .padding(horizontal = 12.dp, vertical = 5.dp),
+        ) {
+            Text(
+                text = "DIRECTORY",
+                style = SpringfieldDirectoryTitleDefaults.badgeStyle,
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFFFD21F)
+@Composable
+private fun SpringfieldDirectoryTitlePreview() {
+    BigSchoolExampleTheme {
+        SpringfieldDirectoryTitle(modifier = Modifier.fillMaxWidth())
+    }
+}
+
+private object SpringfieldDirectoryTitleDefaults {
+    val titleStyle = TextStyle(
+        color = Color(0xFFFFF06A),
+        fontFamily = FontFamily.SansSerif,
+        fontWeight = FontWeight.Black,
+        fontStyle = FontStyle.Italic,
+        fontSize = 40.sp,
+        letterSpacing = 1.2.sp,
+        shadow = Shadow(
+            color = Color.Black,
+            offset = Offset(1f, 1f),
+            blurRadius = 0f,
+        ),
+    )
+
+    val titleShadowStyle = TextStyle(
+        color = Color.Black,
+        fontFamily = FontFamily.SansSerif,
+        fontWeight = FontWeight.Black,
+        fontStyle = FontStyle.Italic,
+        fontSize = 40.sp,
+        letterSpacing = 1.2.sp,
+    )
+
+    val badgeStyle = TextStyle(
+        color = Color.Black,
+        fontFamily = FontFamily.SansSerif,
+        fontWeight = FontWeight.Black,
+        fontStyle = FontStyle.Italic,
+        fontSize = 18.sp,
+        letterSpacing = 0.8.sp,
+    )
 }
 
 private fun bodyStateFor(uiState: CharactersUiState): CharactersBodyState {
